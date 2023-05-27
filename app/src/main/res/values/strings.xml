@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Daily Expense</string>
+    <string name="daily_limit">Daily Limit</string>
+    <string name="set_limit">Set Limit</string>
+</resources>
