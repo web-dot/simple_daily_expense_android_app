@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         binding.setLimit.setOnClickListener { setLimit() }
     }
 
+    
     private fun setLimit(){
         val dailyLimitText = binding.dailyLimit.text.toString()
     }
