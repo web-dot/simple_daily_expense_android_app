@@ -15,13 +15,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var binding: ActivityMainBinding
     private var limit: Int = 0;
+    private var spent: Int = 0;
 
     companion object{
         private const val PREFS_NAME = "MyPrefs"
         private const val LIMIT_KEY = "Limit"
+        private const val SPENT_KEY = "spent"
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         limit = sharedPrefs.getInt(LIMIT_KEY, 0)
+        spent = sharedPrefs.getInt(SPENT_KEY, 0)
 
         binding.setLimit.setOnClickListener { setLimit() }
         binding.deductButton.setOnClickListener { deductExpense() }
@@ -38,23 +39,25 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         sharedPrefs.edit().putInt(LIMIT_KEY, limit).apply()
+        sharedPrefs.edit().putInt(SPENT_KEY, spent).apply()
     }
 
     override fun onResume() {
         super.onResume()
         limit = sharedPrefs.getInt(LIMIT_KEY, 0)
+        spent = sharedPrefs.getInt(SPENT_KEY, 0)
         binding.limitText.text = getString(R.string.limit_text, limit)
         binding.limitText.visibility = View.VISIBLE
     }
 
 
     private fun setLimit(){
+        spent = 0;
         val dailyLimitText = binding.dailyLimit.text.toString()
         if(dailyLimitText.isNotEmpty()){
             limit = dailyLimitText.toInt()
             binding.limitText.text = getString(R.string.limit_text, limit)
             binding.limitText.visibility = View.VISIBLE
-            Log.d("Main", "Limit set: $limit")
             binding.dailyLimit.text.clear()
 
             val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -67,9 +70,10 @@ class MainActivity : AppCompatActivity() {
         if(expenseText.isNotEmpty()){
             val expense = expenseText.toInt()
             if(expense <= limit){
+                spent += expense
                 limit -= expense
                 binding.limitText.text = getString(R.string.limit_text, limit)
-                Log.d("MainActivity", "Expense deducted: $expense")
+                binding.spentText.text = getString(R.string.spent_text, spent)
                 binding.deductAmount.text.clear()
             }
             else{

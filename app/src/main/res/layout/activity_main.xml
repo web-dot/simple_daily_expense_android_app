@@ -49,17 +49,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/limit_text"
-        app:layout_constraintVertical_bias="0.076" />
+        app:layout_constraintVertical_bias="0.211" />
 
     <Button
         android:id="@+id/deduct_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="172dp"
         android:text="@string/deduct"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.434"
+        app:layout_constraintHorizontal_bias="0.387"
         app:layout_constraintStart_toEndOf="@+id/deduct_amount"
         app:layout_constraintTop_toBottomOf="@+id/set_limit" />
+
+    <TextView
+        android:id="@+id/spent_text"
+        android:layout_width="147dp"
+        android:layout_height="35dp"
+        android:text="@string/spent_text"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/deduct_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.009"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/limit_text"
+        app:layout_constraintVertical_bias="0.42" />
 </androidx.constraintlayout.widget.ConstraintLayout>
