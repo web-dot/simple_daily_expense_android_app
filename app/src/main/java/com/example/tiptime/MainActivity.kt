@@ -29,8 +29,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         limit = sharedPrefs.getInt(LIMIT_KEY, 0)
         spent = sharedPrefs.getInt(SPENT_KEY, 0)
+
+        binding.limitText.text = getString(R.string.limit_text, limit)
+        binding.spentText.text = getString(R.string.spent_text, spent)
 
         binding.setLimit.setOnClickListener { setLimit() }
         binding.deductButton.setOnClickListener { deductExpense() }
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         if(dailyLimitText.isNotEmpty()){
             limit = dailyLimitText.toInt()
             binding.limitText.text = getString(R.string.limit_text, limit)
+            binding.spentText.text = getString(R.string.spent_text, spent)
             binding.limitText.visibility = View.VISIBLE
             binding.dailyLimit.text.clear()
 
@@ -74,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                 limit -= expense
                 binding.limitText.text = getString(R.string.limit_text, limit)
                 binding.spentText.text = getString(R.string.spent_text, spent)
+                sharedPrefs.edit().putInt(SPENT_KEY, spent).apply()
                 binding.deductAmount.text.clear()
             }
             else{
