@@ -17,6 +17,10 @@ class MainActivity : AppCompatActivity() {
     private var limit: Int = 0;
     private var spent: Int = 0;
 
+    private var limitsSetCount = 0;
+    private var limitsExceededCount = 0;
+    private var successRate = 0;
+
     companion object{
         private const val PREFS_NAME = "MyPrefs"
         private const val LIMIT_KEY = "Limit"
@@ -67,6 +71,7 @@ class MainActivity : AppCompatActivity() {
 
             val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             sharedPrefs.edit().putInt(LIMIT_KEY, limit).apply()
+            limitsSetCount++;
         }
     }
 
@@ -74,18 +79,21 @@ class MainActivity : AppCompatActivity() {
         val expenseText = binding.deductAmount.text.toString()
         if(expenseText.isNotEmpty()){
             val expense = expenseText.toInt()
-            if(expense <= limit){
                 spent += expense
                 limit -= expense
                 binding.limitText.text = getString(R.string.limit_text, limit)
                 binding.spentText.text = getString(R.string.spent_text, spent)
                 sharedPrefs.edit().putInt(SPENT_KEY, spent).apply()
                 binding.deductAmount.text.clear()
-            }
-            else{
-                Log.d("MainActivity", "Expense exceeds limit")
+            if(limit < 0){
+                limitsExceededCount++;
+                calculateSuccessRate();
             }
         }
+    }
+
+    private fun calculateSuccessRate(){
+        successRate = (limitsExceededCount / limitsSetCount) * 100;
     }
 
 
