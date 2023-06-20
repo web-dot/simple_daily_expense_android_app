@@ -75,4 +75,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/limit_text"
         app:layout_constraintVertical_bias="0.42" />
+
+    <TextView
+        android:id="@+id/limitAchievedPercentText"
+        android:layout_width="122dp"
+        android:layout_height="68dp"
+        android:text="@string/limit_achieved_percent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

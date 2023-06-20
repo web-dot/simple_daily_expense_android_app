@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.example.tiptime.databinding.ActivityMainBinding
 import java.text.NumberFormat
 
@@ -14,6 +15,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var binding: ActivityMainBinding
+    private lateinit var limitAchievedPercentText: TextView
+
     private var limit: Int = 0;
     private var spent: Int = 0;
 
@@ -37,12 +40,18 @@ class MainActivity : AppCompatActivity() {
 
         limit = sharedPrefs.getInt(LIMIT_KEY, 0)
         spent = sharedPrefs.getInt(SPENT_KEY, 0)
+        limitsExceededCount = sharedPrefs.getInt("limitsExceededCount", 1)
+        limitsAchievedCount = sharedPrefs.getInt("limitsAchievedCount", 1)
+        limitAchievedPercent = sharedPrefs.getInt("limitAchievedPercent", 0)
+
 
         binding.limitText.text = getString(R.string.limit_text, limit)
         binding.spentText.text = getString(R.string.spent_text, spent)
 
         binding.setLimit.setOnClickListener { setLimit() }
         binding.deductButton.setOnClickListener { deductExpense() }
+        limit = 0;
+        limitAchievedPercentText = findViewById(R.id.limitAchievedPercentText)
 
     }
 
@@ -50,6 +59,10 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         sharedPrefs.edit().putInt(LIMIT_KEY, limit).apply()
         sharedPrefs.edit().putInt(SPENT_KEY, spent).apply()
+        sharedPrefs.edit().putInt("limitsExceededCount", limitsExceededCount).apply()
+        sharedPrefs.edit().putInt("limitsAchievedCount", limitsAchievedCount).apply()
+        sharedPrefs.edit().putInt("limitAchievedPercent", limitAchievedPercent).apply()
+
     }
 
     override fun onResume() {
@@ -98,10 +111,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateSuccessRate(){
-        Log.d("limitsAchievedCount", "limitsAchievedCount: $limitsAchievedCount");
-        Log.d("limitsExceededCount", "limitsExceededCount: $limitsExceededCount");
-        limitAchievedPercent = (limitsAchievedCount / limitsExceededCount) * 100;
-        Log.d("Limit Achieved", "Limit Achieved Percentage: $limitAchievedPercent");
+
+        limitAchievedPercent =
+            ((limitsAchievedCount.toDouble() / limitsExceededCount.toDouble()) * 100).toInt();
+        binding.limitAchievedPercentText.text = getString(R.string.limit_achieved_percent, limitAchievedPercent)
+        Log.d("limitsAchievedCount", "limitsAchievedCount: $limitsAchievedCount, $limitsExceededCount, $limitAchievedPercent");
     }
 
 

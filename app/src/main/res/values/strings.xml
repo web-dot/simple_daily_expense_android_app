@@ -6,4 +6,6 @@
     <string name="enter_expense">Enter Expense</string>
     <string name="deduct">Deduct</string>
     <string name="spent_text">Spent = %1$d</string>
+    <string name="limit_achieved_percent">Percent = %1$d</string>
+
 </resources>
