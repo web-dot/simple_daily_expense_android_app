@@ -17,9 +17,10 @@ class MainActivity : AppCompatActivity() {
     private var limit: Int = 0;
     private var spent: Int = 0;
 
-    private var limitsSetCount = 0;
-    private var limitsExceededCount = 0;
-    private var successRate = 0;
+    private var limitsExceededCount = 1;
+    private var limitsAchievedCount = 1;
+
+    private var limitAchievedPercent = 0;
 
     companion object{
         private const val PREFS_NAME = "MyPrefs"
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.setLimit.setOnClickListener { setLimit() }
         binding.deductButton.setOnClickListener { deductExpense() }
+
     }
 
     override fun onPause() {
@@ -60,6 +62,14 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setLimit(){
+        if(limit >= 0){
+            limitsAchievedCount++;
+            calculateSuccessRate();
+        }
+        if(limit < 0){
+            limitsExceededCount++;
+            calculateSuccessRate();
+        }
         spent = 0;
         val dailyLimitText = binding.dailyLimit.text.toString()
         if(dailyLimitText.isNotEmpty()){
@@ -71,7 +81,6 @@ class MainActivity : AppCompatActivity() {
 
             val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             sharedPrefs.edit().putInt(LIMIT_KEY, limit).apply()
-            limitsSetCount++;
         }
     }
 
@@ -84,16 +93,15 @@ class MainActivity : AppCompatActivity() {
                 binding.limitText.text = getString(R.string.limit_text, limit)
                 binding.spentText.text = getString(R.string.spent_text, spent)
                 sharedPrefs.edit().putInt(SPENT_KEY, spent).apply()
-                binding.deductAmount.text.clear()
-            if(limit < 0){
-                limitsExceededCount++;
-                calculateSuccessRate();
-            }
+                binding.deductAmount.text.clear();
         }
     }
 
     private fun calculateSuccessRate(){
-        successRate = (limitsExceededCount / limitsSetCount) * 100;
+        Log.d("limitsAchievedCount", "limitsAchievedCount: $limitsAchievedCount");
+        Log.d("limitsExceededCount", "limitsExceededCount: $limitsExceededCount");
+        limitAchievedPercent = (limitsAchievedCount / limitsExceededCount) * 100;
+        Log.d("Limit Achieved", "Limit Achieved Percentage: $limitAchievedPercent");
     }
 
 
